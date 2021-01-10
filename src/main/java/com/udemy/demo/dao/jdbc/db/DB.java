@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-// remover o public
 public class DB implements AutoCloseable {
 	
 	private static String url = "jdbc:postgresql://localhost:5432/coursejdbc";

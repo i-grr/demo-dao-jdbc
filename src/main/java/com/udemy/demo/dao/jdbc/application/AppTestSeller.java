@@ -9,7 +9,7 @@ import com.udemy.demo.dao.jdbc.model.dao.SellerDao;
 import com.udemy.demo.dao.jdbc.model.entities.Department;
 import com.udemy.demo.dao.jdbc.model.entities.Seller;
 
-public class App {
+public class AppTestSeller {
 	
 	public static void main(String[] args) {
 		

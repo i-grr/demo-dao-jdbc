@@ -15,6 +15,7 @@ import com.udemy.demo.dao.jdbc.db.DbException;
 import com.udemy.demo.dao.jdbc.model.dao.SellerDao;
 import com.udemy.demo.dao.jdbc.model.entities.Department;
 import com.udemy.demo.dao.jdbc.model.entities.Seller;
+import com.udemy.demo.dao.jdbc.model.service.SellerRule;
 
 public class SellerDaoJDBC implements SellerDao {
 
@@ -131,8 +132,8 @@ public class SellerDaoJDBC implements SellerDao {
 			resultSet = preparedStatement.executeQuery();
 			
 			if (resultSet.next()) {
-				Department department = instantiateDepartment(resultSet);
-				Seller obj = instantiateSeller(resultSet, department);
+				Department department = new SellerRule().instantiateDepartment(resultSet);
+				Seller obj = new SellerRule().instantiateSeller(resultSet, department);
 				return obj;
 			}
 			
@@ -146,28 +147,6 @@ public class SellerDaoJDBC implements SellerDao {
 					DB.closeResultSet(resultSet);
 					DB.closeStatement(preparedStatement);
 				}
-	}
-
-	private Seller instantiateSeller(ResultSet resultSet, Department department) throws SQLException {
-		Seller obj = new Seller();
-		
-		obj.setId(resultSet.getInt("Id"));
-		obj.setName(resultSet.getString("Name"));
-		obj.setEmail(resultSet.getString("Email"));
-		obj.setBaseSalary(resultSet.getDouble("BaseSalary"));
-		obj.setBirthDate(resultSet.getDate("BirthDate"));
-		obj.setDepartment(department);
-		
-		return obj;
-	}
-
-	private Department instantiateDepartment(ResultSet resultSet) throws SQLException {
-		Department department = new Department();
-		
-		department.setId(resultSet.getInt("DepartmentId"));
-		department.setName(resultSet.getString("DepName"));
-		
-		return department;	
 	}
 
 	public List<Seller> findAll() {
@@ -193,11 +172,11 @@ public class SellerDaoJDBC implements SellerDao {
 				Department dep = map.get(resultSet.getInt("DepartmentId"));
 				
 				if (dep == null) {
-					dep = instantiateDepartment(resultSet);
+					dep = new SellerRule().instantiateDepartment(resultSet);
 					map.put(resultSet.getInt("DepartmentId"), dep);
 				}
 
-				Seller obj = instantiateSeller(resultSet, dep);
+				Seller obj = new SellerRule().instantiateSeller(resultSet, dep);
 				list.add(obj);
 			}
 			
@@ -240,11 +219,11 @@ public class SellerDaoJDBC implements SellerDao {
 				Department dep = map.get(resultSet.getInt("DepartmentId"));
 				
 				if (dep == null) {
-					dep = instantiateDepartment(resultSet);
+					dep = new SellerRule().instantiateDepartment(resultSet);
 					map.put(resultSet.getInt("DepartmentId"), dep);
 				}
 
-				Seller obj = instantiateSeller(resultSet, dep);
+				Seller obj = new SellerRule().instantiateSeller(resultSet, dep);
 				list.add(obj);
 			}
 			
