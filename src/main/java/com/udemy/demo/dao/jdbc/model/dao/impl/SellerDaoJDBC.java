@@ -58,12 +58,38 @@ public class SellerDaoJDBC implements SellerDao {
 	}
 
 	public void update(Seller obj) {
-		// TODO Auto-generated method stub
+		
+		PreparedStatement preparedStatement = null;
+		
+		try (Connection conn = DB.getConnection()) {
+			
+			String sql = "UPDATE seller "
+					   + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+					   + "WHERE Id = ?";
+			preparedStatement = conn.prepareStatement(sql);
+			
+			preparedStatement.setString(1, obj.getName());
+			preparedStatement.setString(2, obj.getEmail());
+			preparedStatement.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
+			preparedStatement.setDouble(4, obj.getBaseSalary());
+			preparedStatement.setInt(5, obj.getDepartment().getId());
+			preparedStatement.setInt(6, obj.getId());
+			
+			preparedStatement.executeUpdate();
+			
+		}
+			catch (SQLException e) {
+				throw new DbException(e.getMessage());
+			}
+				finally {
+					DB.closeStatement(preparedStatement);
+				}
 		
 	}
 
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		
+
 		
 	}
 
@@ -106,7 +132,7 @@ public class SellerDaoJDBC implements SellerDao {
 		
 		obj.setId(resultSet.getInt("Id"));
 		obj.setName(resultSet.getString("Name"));
-		obj.setName(resultSet.getString("Email"));
+		obj.setEmail(resultSet.getString("Email"));
 		obj.setBaseSalary(resultSet.getDouble("BaseSalary"));
 		obj.setBirthDate(resultSet.getDate("BirthDate"));
 		obj.setDepartment(department);

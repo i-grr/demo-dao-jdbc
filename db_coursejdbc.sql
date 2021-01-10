@@ -1,8 +1,8 @@
 -- PostgreSQL
 
-CREATE DATABASE coursejdbc_2;
+CREATE DATABASE coursejdbc;
 
-\c cousejdbc;
+\c coursejdbc;
 
 CREATE TABLE department (
   Id SERIAL PRIMARY KEY,
