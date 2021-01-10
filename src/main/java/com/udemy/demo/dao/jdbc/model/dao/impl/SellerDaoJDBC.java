@@ -64,7 +64,6 @@ public class SellerDaoJDBC implements SellerDao {
 					DB.closeResultSet(resultSet);
 					DB.closeStatement(preparedStatement);
 				}
-		
 	}
 
 	private Seller instantiateSeller(ResultSet resultSet, Department department) throws SQLException {
@@ -90,8 +89,47 @@ public class SellerDaoJDBC implements SellerDao {
 	}
 
 	public List<Seller> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		
+		try (Connection conn = DB.getConnection()) {
+			
+			String sql = "SELECT seller.*, department.Name as DepName "
+					+ "FROM seller INNER JOIN department "
+					+ "ON seller.DepartmentId = department.Id "
+					+ "ORDER BY Name";
+			preparedStatement = conn.prepareStatement(sql);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			List<Seller> list = new ArrayList<>();
+			Map<Integer, Department> map = new HashMap<>();
+			
+			while (resultSet.next()) {
+				
+				Department dep = map.get(resultSet.getInt("DepartmentId"));
+				
+				if (dep == null) {
+					dep = instantiateDepartment(resultSet);
+					map.put(resultSet.getInt("DepartmentId"), dep);
+				}
+
+				Seller obj = instantiateSeller(resultSet, dep);
+				list.add(obj);
+			}
+			
+			return list;
+			
+		}
+			catch (SQLException e) {
+				throw new DbException(e.getMessage());
+			}
+				finally {
+					DB.closeResultSet(resultSet);
+					DB.closeStatement(preparedStatement);
+				}
+		
 	}
 
 	@Override
@@ -117,14 +155,14 @@ public class SellerDaoJDBC implements SellerDao {
 			
 			while (resultSet.next()) {
 				
-				Department newDepartment = map.get(resultSet.getInt("DepartmentId"));
+				Department dep = map.get(resultSet.getInt("DepartmentId"));
 				
-				if (newDepartment == null) {
-					newDepartment = instantiateDepartment(resultSet);
-					map.put(resultSet.getInt("DepartmentId"), newDepartment);
+				if (dep == null) {
+					dep = instantiateDepartment(resultSet);
+					map.put(resultSet.getInt("DepartmentId"), dep);
 				}
 
-				Seller obj = instantiateSeller(resultSet, newDepartment);
+				Seller obj = instantiateSeller(resultSet, dep);
 				list.add(obj);
 			}
 			
