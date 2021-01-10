@@ -2,6 +2,7 @@ package com.udemy.demo.dao.jdbc.model.dao;
 
 import java.util.List;
 
+import com.udemy.demo.dao.jdbc.model.entities.Department;
 import com.udemy.demo.dao.jdbc.model.entities.Seller;
 
 public interface SellerDao {
@@ -16,4 +17,5 @@ public interface SellerDao {
 	
 	List<Seller> findAll();
 	
+	List<Seller> findByDepartment(Department department);
 }
